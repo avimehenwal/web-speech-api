@@ -4,6 +4,16 @@ A **Text-to-Speech** and **Speech Recognition** demo built with **React 18 + Vit
 
 ---
 
+## 🌐 Live Demo
+
+**[https://avimehenwal.github.io/web-speech-api/](https://avimehenwal.github.io/web-speech-api/)**
+
+> Automatically deployed from the `main` branch via GitHub Actions.
+
+[![Deploy to GitHub Pages](https://github.com/avimehenwal/web-speech-api/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/avimehenwal/web-speech-api/actions/workflows/gh-pages.yml)
+
+---
+
 ## Screenshots
 <table>
   <tr>
