@@ -147,6 +147,10 @@ export function useSpeechRecognition() {
 
       for (let i = e.resultIndex; i < e.results.length; i++) {
         const result = e.results[i];
+
+        console.log("Result received:", result);
+        console.log("Interim chunk:", interimChunk);
+
         if (result.isFinal) {
           finalChunk += result[0].transcript;
           lastConfidence = result[0].confidence;
