@@ -29,8 +29,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      should_deploy: ${{ steps.build_hash_cache.outputs.cache-hit != 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,29 +43,16 @@ jobs:
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
 
-      - name: Record build hash
-        run: echo "build" > .build-hash
-
-      - name: Restore build hash cache
-        id: build_hash_cache
-        uses: actions/cache@v4
-        with:
-          path: .build-hash
-          key: build-hash-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('src/**', 'asset/**', 'index.html', 'package.json', 'package-lock.json', 'vite.config.js') }}
-
       - name: Build
-        if: steps.build_hash_cache.outputs.cache-hit != 'true'
         run: npm run build
 
       - name: Upload Pages artifact
-        if: steps.build_hash_cache.outputs.cache-hit != 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
   deploy:
     needs: build
-    if: needs.build.outputs.should_deploy == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
