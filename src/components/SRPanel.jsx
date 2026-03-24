@@ -16,7 +16,10 @@ const LANGUAGES = [
   { code: "hi-IN", label: "Hindi" },
 ];
 
-export default function SRPanel() {
+export default function SRPanel({
+  simulateUnsupported,
+  onSimulateUnsupportedChange,
+}) {
   const {
     supported,
     listening,
@@ -31,7 +34,7 @@ export default function SRPanel() {
     startListening,
     stopListening,
     clearTranscript,
-  } = useSpeechRecognition();
+  } = useSpeechRecognition({ simulateUnsupported });
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
@@ -52,6 +55,28 @@ export default function SRPanel() {
           Edge, or Safari. Firefox does not support this API yet.
         </div>
       )}
+
+      <label
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          fontSize: ".72rem",
+          letterSpacing: ".08em",
+          textTransform: "uppercase",
+          color: simulateUnsupported ? "var(--yellow)" : "var(--muted)",
+          cursor: "pointer",
+          width: "fit-content",
+        }}
+      >
+        <input
+          type="checkbox"
+          checked={simulateUnsupported}
+          onChange={(e) => onSimulateUnsupportedChange(e.target.checked)}
+          style={{ accentColor: "var(--yellow)", width: 14, height: 14 }}
+        />
+        Simulate Unsupported API
+      </label>
 
       {/* Language + Continuous */}
       <div
@@ -123,7 +148,6 @@ export default function SRPanel() {
             width: 80,
             height: 80,
             borderRadius: "50%",
-            border: "none",
             cursor: supported ? "pointer" : "not-allowed",
             background: listening ? "var(--accent2)" : "var(--card)",
             color: listening ? "#000" : "var(--accent2)",
@@ -237,7 +261,7 @@ export default function SRPanel() {
         }}
       >
         <span>{listening ? "●" : "◎"}</span>
-        statusMsg = {statusMsg}
+        {statusMsg}
       </div>
     </div>
   );

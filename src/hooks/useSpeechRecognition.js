@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+function getSpeechRecognition() {
+  return window.SpeechRecognition || window.webkitSpeechRecognition;
+}
 
 /**
  * useSpeechRecognition — encapsulates all Speech Recognition logic.
@@ -14,15 +16,14 @@ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
  *  statusMsg,
  *  startListening, stopListening, clearTranscript
  */
-export function useSpeechRecognition() {
-  const supported = !!SR;
-
+export function useSpeechRecognition({ simulateUnsupported = false } = {}) {
   const [listening, setListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [interim, setInterim] = useState("");
   const [lang, setLang] = useState("en-US");
   const [continuous, setContinuous] = useState(true);
   const [confidence, setConfidence] = useState(null);
+  const supported = !simulateUnsupported && !!getSpeechRecognition();
   const [statusMsg, setStatusMsg] = useState(
     supported
       ? "Press the mic button to start listening."
@@ -105,7 +106,8 @@ export function useSpeechRecognition() {
   }, []);
 
   const startRecognitionSession = useCallback(() => {
-    if (!supported) return;
+    const SpeechRecognitionCtor = getSpeechRecognition();
+    if (!supported || !SpeechRecognitionCtor) return;
 
     clearRestartTimer();
     hadFatalErrorRef.current = false;
@@ -116,7 +118,7 @@ export function useSpeechRecognition() {
       recogRef.current = null;
     }
 
-    const recognition = new SR();
+    const recognition = new SpeechRecognitionCtor();
     recognition.lang = langRef.current;
     recognition.continuous = continuousRef.current;
     recognition.interimResults = true;
@@ -274,6 +276,33 @@ export function useSpeechRecognition() {
     setInterim("");
     setConfidence(null);
   }, []);
+
+  useEffect(() => {
+    if (simulateUnsupported) {
+      shouldListenRef.current = false;
+      stopRequestedRef.current = true;
+      clearRestartTimer();
+      stopCurrentRecognition("abort");
+      setListening(false);
+      setInterim("");
+      setStatusMsg("Speech recognition is not supported in this browser.");
+      return;
+    }
+
+    if (!listening) {
+      setStatusMsg(
+        supported
+          ? "Press the mic button to start listening."
+          : "Speech recognition is not supported in this browser.",
+      );
+    }
+  }, [
+    simulateUnsupported,
+    supported,
+    listening,
+    clearRestartTimer,
+    stopCurrentRecognition,
+  ]);
 
   useEffect(() => {
     return () => {
