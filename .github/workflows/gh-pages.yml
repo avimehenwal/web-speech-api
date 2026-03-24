@@ -31,8 +31,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       should_deploy: ${{ steps.build_hash_cache.outputs.cache-hit != 'true' }}
-    env:
-      BUILD_HASH: ${{ hashFiles('src/**', 'asset/**', 'index.html', 'package.json', 'package-lock.json', 'vite.config.js') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,14 +46,14 @@ jobs:
         run: npm ci --prefer-offline --no-audit
 
       - name: Record build hash
-        run: echo "${BUILD_HASH}" > .build-hash
+        run: echo "build" > .build-hash
 
       - name: Restore build hash cache
         id: build_hash_cache
         uses: actions/cache@v4
         with:
           path: .build-hash
-          key: build-hash-${{ runner.os }}-${{ github.ref_name }}-${{ env.BUILD_HASH }}
+          key: build-hash-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('src/**', 'asset/**', 'index.html', 'package.json', 'package-lock.json', 'vite.config.js') }}
 
       - name: Build
         if: steps.build_hash_cache.outputs.cache-hit != 'true'
