@@ -4,7 +4,9 @@ import SRPanel from "./components/SRPanel";
 import TTSPanel from "./components/TTSPanel";
 import { SupportBadge } from "./components/UI";
 
-const ttsSupported = "speechSynthesis" in window;
+function getSpeechSynthesis() {
+  return window.speechSynthesis;
+}
 
 function getSpeechRecognition() {
   return window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -17,7 +19,9 @@ const TABS = [
 
 export default function App() {
   const [tab, setTab] = useState("tts");
+  const [simulateTtsUnsupported, setSimulateTtsUnsupported] = useState(false);
   const [simulateSrUnsupported, setSimulateSrUnsupported] = useState(false);
+  const ttsSupported = !simulateTtsUnsupported && !!getSpeechSynthesis();
   const srSupported = !simulateSrUnsupported && !!getSpeechRecognition();
 
   return (
@@ -130,7 +134,10 @@ export default function App() {
         }}
       >
         {tab === "tts" ? (
-          <TTSPanel />
+          <TTSPanel
+            simulateUnsupported={simulateTtsUnsupported}
+            onSimulateUnsupportedChange={setSimulateTtsUnsupported}
+          />
         ) : (
           <SRPanel
             simulateUnsupported={simulateSrUnsupported}
