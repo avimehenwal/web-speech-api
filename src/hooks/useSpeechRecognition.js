@@ -148,9 +148,6 @@ export function useSpeechRecognition() {
       for (let i = e.resultIndex; i < e.results.length; i++) {
         const result = e.results[i];
 
-        console.log("Result received:", result);
-        console.log("Interim chunk:", interimChunk);
-
         if (result.isFinal) {
           finalChunk += result[0].transcript;
           lastConfidence = result[0].confidence;
@@ -163,7 +160,12 @@ export function useSpeechRecognition() {
         setTranscript((prev) => `${prev}${finalChunk.trim()} `);
         if (lastConfidence !== null)
           setConfidence(Math.round(lastConfidence * 100));
-        setStatusMsg("Result received.");
+        // In continuous mode reset to Listening so the status doesn't get
+        // stuck after the result — onsoundstart/onspeechstart don't reliably
+        // re-fire for every new utterance in Chrome's continuous mode.
+        setStatusMsg(
+          continuousRef.current ? "Listening..." : "Result received.",
+        );
       }
 
       setInterim(interimChunk);
@@ -174,15 +176,19 @@ export function useSpeechRecognition() {
     };
 
     recognition.onspeechend = () => {
-      setStatusMsg("Speech ended. Processing...");
+      // In continuous mode this fires between utterances, not at session end.
+      // Suppress it to avoid overwriting the active "Listening..." status.
+      if (!continuousRef.current) setStatusMsg("Speech ended. Processing...");
     };
 
     recognition.onsoundend = () => {
-      setStatusMsg("Sound ended.");
+      if (!continuousRef.current) setStatusMsg("Sound ended.");
     };
 
     recognition.onaudioend = () => {
-      setStatusMsg("Audio capture ended.");
+      // In continuous mode onaudioend means the whole session is ending
+      // (onend fires immediately after), so onend will set the final message.
+      if (!continuousRef.current) setStatusMsg("Audio capture ended.");
     };
 
     recognition.onerror = (e) => {
