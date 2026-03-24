@@ -6,21 +6,21 @@ A **Text-to-Speech** and **Speech Recognition** demo built with **React 18 + Vit
 
 ## ✨ Features
 
-| Feature | Details |
-|---|---|
-| **Text-to-Speech** | Voice picker, rate / pitch / volume sliders, play / pause / resume / stop, live word-boundary highlighting |
-| **Speech Recognition** | Continuous or single-shot mode, 12 language options, interim + final transcript, confidence score |
-| **React hooks** | `useTTS` and `useSpeechRecognition` — clean, reusable, easy to extend |
-| **No build-time API calls** | 100% client-side Web Speech API |
+| Feature                     | Details                                                                                                    |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Text-to-Speech**          | Voice picker, rate / pitch / volume sliders, play / pause / resume / stop, live word-boundary highlighting |
+| **Speech Recognition**      | Continuous or single-shot mode, 12 language options, interim + final transcript, confidence score          |
+| **React hooks**             | `useTTS` and `useSpeechRecognition` — clean, reusable, easy to extend                                      |
+| **No build-time API calls** | 100% client-side Web Speech API                                                                            |
 
 ---
 
 ## 🖥 Browser support
 
-| Feature | Chrome | Edge | Safari | Firefox |
-|---|---|---|---|---|
-| Text-to-Speech (`SpeechSynthesis`) | ✅ | ✅ | ✅ | ✅ |
-| Speech Recognition (`SpeechRecognition`) | ✅ | ✅ | ✅ | ❌ |
+| Feature                                  | Chrome | Edge | Safari | Firefox |
+| ---------------------------------------- | ------ | ---- | ------ | ------- |
+| Text-to-Speech (`SpeechSynthesis`)       | ✅      | ✅    | ✅      | ✅       |
+| Speech Recognition (`SpeechRecognition`) | ✅      | ✅    | ✅      | ❌       |
 
 > **Tip:** For the best experience, use **Chrome** or **Edge** — they support both APIs and expose the most voices.
 
@@ -111,16 +111,10 @@ In **`src/App.jsx`**, lift the transcript state up and pass it as the initial te
 
 ## 📦 Dependencies
 
-| Package | Purpose |
-|---|---|
-| `react` + `react-dom` | UI framework |
-| `vite` | Dev server & bundler |
+| Package                | Purpose                |
+| ---------------------- | ---------------------- |
+| `react` + `react-dom`  | UI framework           |
+| `vite`                 | Dev server & bundler   |
 | `@vitejs/plugin-react` | JSX transform for Vite |
 
 Zero runtime dependencies beyond React itself.
-
----
-
-## 📄 License
-
-MIT — free to use, modify, and distribute.
