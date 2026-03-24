@@ -4,6 +4,24 @@ A **Text-to-Speech** and **Speech Recognition** demo built with **React 18 + Vit
 
 ---
 
+## Screenshots
+<table>
+  <tr>
+    <th align="center">Text-to-Speech Demo</th>
+    <th width="32"></th>
+    <th align="center">Speech Recognition Demo</th>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+      <img src="./asset/TTS.png" alt="Text-to-Speech demo screen" height="420" />
+    </td>
+    <td width="32"></td>
+    <td align="center" valign="top">
+      <img src="./asset/STT.png" alt="Speech Recognition demo screen" height="420" />
+    </td>
+  </tr>
+</table>
+
 ## ✨ Features
 
 | Feature                     | Details                                                                                                    |
